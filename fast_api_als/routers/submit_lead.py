@@ -40,12 +40,10 @@ async def submit(file: Request, apikey: APIKey = Depends(get_api_key)):
         logging.error("API Key Vefification failed")
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="API Key invalid")
     
-    logging.info("Parsing body")
     body = await file.body()
     body = str(body, 'utf-8')
 
     obj = parse_xml(body)
-    logging.info("Parsed body")
 
     # check if xml was not parsable, if not return
     if not obj:
@@ -233,8 +231,10 @@ async def submit(file: Request, apikey: APIKey = Depends(get_api_key)):
         }
         res = sqs_helper_session.send_message(message)
     time_taken = (int(time.time() * 1000.0) - start)
-
-    response_message = f"{result} Response Time : {time_taken} ms"
-    logging.info(response_message)
+    try:
+        response_message = f"{result} Response Time : {time_taken} ms"
+        logging.info(response_message)
+    except:
+        logging.error("result not found")
 
     return response_body
