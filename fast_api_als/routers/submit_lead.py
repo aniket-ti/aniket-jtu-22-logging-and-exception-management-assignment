@@ -234,7 +234,8 @@ async def submit(file: Request, apikey: APIKey = Depends(get_api_key)):
     try:
         response_message = f"{result} Response Time : {time_taken} ms"
         logging.info(response_message)
-    except:
+    except Exception as e:
         logging.error("result not found")
+        raise e
 
     return response_body
