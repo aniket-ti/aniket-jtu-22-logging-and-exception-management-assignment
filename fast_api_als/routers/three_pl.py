@@ -23,7 +23,7 @@ async def reset_authkey(request: Request, token: str = Depends(get_token)):
         raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail=f"{role} not allowed to post")
     if role == "ADMIN":
         provider = body['3pl']
-    logging.info("Setting auth key")
+    logging.info("Setting auth key for database session")
     apikey = db_helper_session.set_auth_key(username=provider)
     logging.info("Respoding 200 OK")
     return {
